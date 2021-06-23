@@ -1,9 +1,9 @@
 # hackbean_name_that_video
 https://hackbeanpot.com/
 
-Project submission for HackBeanpot 2021; an annual student-run hackathon for anyone interested in hacking together a cool project
-Link to submission page: https://devpost.com/software/name-that-90-s-music-video 
-Profile page: https://devpost.com/jeannille
+- Project submission for HackBeanpot 2021; an annual student-run hackathon for anyone interested in hacking together a cool project
+- Link to submission page: https://devpost.com/software/name-that-90-s-music-video 
+- User profile page: https://devpost.com/jeannille
 
 ## Inspiration:
 The 90s!
