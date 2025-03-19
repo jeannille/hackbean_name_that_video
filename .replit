@@ -1,0 +1,24 @@
+modules = ["java-graalvm22.3"]
+run = "start"
+
+[nix]
+channel = "stable-24_05"
+
+[deployment]
+run = ["sh", "-c", "start"]
+
+[workflows]
+runButton = "Run Java"
+
+[[workflows.workflow]]
+name = "Run Java"
+author = 39251440
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "javac -d . src/**/*.java"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "java model.Main"
