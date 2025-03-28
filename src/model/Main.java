@@ -3,8 +3,8 @@ package model;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.security.Key;
 import java.util.Map;
+import java.util.Scanner;
 
 public class Main {
 
@@ -24,9 +24,10 @@ public class Main {
             Player currentPlayer = startup.getPlayers().get(count % startup.getPlayers().size());
             Play currentPlay = new Play(imageMap.get(each), currentPlayer, view);
 
-            System.out.println("Current player: " + currentPlayer.getName());
-            System.out.println("Make a guess from the following: \n" + each + "\n");
-            
+            System.out.println("Make a guess from the following: \n"
+                    + each + "\n"
+                    + "Hot Cross Buns\n");
+
             Scanner scanner = new Scanner(System.in);
             String guess = scanner.nextLine();
             currentPlay.setGuess(guess);
@@ -34,9 +35,5 @@ public class Main {
             startup.getGameState();
             count++;
         }
-
-            count ++;
-        }
-
     }
 }
