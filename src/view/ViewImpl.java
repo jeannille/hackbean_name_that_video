@@ -48,9 +48,9 @@ public class ViewImpl implements View {
                     <title>Name That 90's Video!</title>
                     <style>
                         body { font-family: Arial; text-align: center; padding: 20px; }
-                        .image-container { width: 400px; height: 300px; margin: 20px auto; border: 2px solid #ccc; 
+                        .image-container { width: 600px; height: 450px; margin: 20px auto; border: 2px solid #ccc; 
                                          display: flex; align-items: center; justify-content: center; }
-                        img { max-width: 100%%; max-height: 100%%; }
+                        img { max-width: 100%%; max-height: 100%%; object-fit: contain; }
                         input { padding: 5px; margin: 10px; }
                         button { padding: 5px 15px; }
                     </style>
@@ -68,7 +68,6 @@ public class ViewImpl implements View {
                         <button onclick="submitGuess()">Submit</button>
                     </div>
                     <div>Score: %d</div>
-                    <div style="margin-top: 20px; color: #666;">Debug - Current Answer: %s</div>
                     <div style="margin-top: 10px; color: #666;">Last submitted guess: <span id="lastGuess">None</span></div>
                     <script>
                         function submitGuess() {
@@ -89,8 +88,7 @@ public class ViewImpl implements View {
                 </html>
                 """, 
                 imageData,
-                score,
-                currentStill != null ? currentStill.getAnswer() : "No answer available"
+                score
             );
             
             exchange.getResponseHeaders().set("Content-Type", "text/html");
