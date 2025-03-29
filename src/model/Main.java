@@ -15,6 +15,12 @@ public class Main {
         view.render();
 
         Map<String, VideoStill> imageMap = startup.getMap();
+        // Display first video still
+        if (!imageMap.isEmpty()) {
+            String firstKey = imageMap.keySet().iterator().next();
+            VideoStill firstStill = imageMap.get(firstKey);
+            view.updateImage(firstStill);
+        }
         startup.addPlayer();
         startup.addPlayer();
         startup.addPlayer();
