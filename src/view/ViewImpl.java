@@ -68,6 +68,7 @@ public class ViewImpl implements View {
                         <button onclick="submitGuess()">Submit</button>
                     </div>
                     <div>Score: %d</div>
+                    <div style="margin-top: 20px; color: #666;">Debug - Current Answer: %s</div>
                     <script>
                         function submitGuess() {
                             const guess = document.getElementById('guess').value;
@@ -85,8 +86,9 @@ public class ViewImpl implements View {
                 </body>
                 </html>
                 """, 
-                currentStill != null ? currentStill.getPath() : "",
-                score
+                imageData,
+                score,
+                currentStill != null ? currentStill.getAnswer() : "No answer available"
             );
             
             exchange.getResponseHeaders().set("Content-Type", "text/html");
