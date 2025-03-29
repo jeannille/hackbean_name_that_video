@@ -5,6 +5,9 @@ import view.ViewImpl;
 public class Main {
     public static void main(String[] args) {
         try {
+            // Set necessary system properties for headless AWT
+            System.setProperty("java.awt.headless", "false");
+            System.setProperty("awt.toolkit", "sun.awt.X11.XToolkit");
 
             // Create components
             NameThatVideoImpl model = new NameThatVideoImpl();
