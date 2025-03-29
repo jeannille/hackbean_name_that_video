@@ -15,11 +15,9 @@ public class ViewImpl implements View {
   private JPanel controlPanel;
 
   public ViewImpl() {
-    // Enable headless mode
-    System.setProperty("java.awt.headless", "true");
+    // Ensure we have a display
+    System.setProperty("java.awt.headless", "false");
     
-    // Use lightweight components
-    JFrame.setDefaultLookAndFeelDecorated(false);
     mainFrame = new JFrame("Name That 90's Video!");
     mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     mainPanel = new JPanel(new BorderLayout(10, 10));
