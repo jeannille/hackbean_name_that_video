@@ -48,7 +48,7 @@ public class ViewImpl implements View {
   }
 
   public void updateImage(VideoStill still) {
-    System.out.println("\n[New image displayed: A screenshot from a 90's music video]");
+    System.out.println("\n[New image: " + still.getAnswer() + " from source: " + still.getPath() + "]");
     System.out.println("Hint: The song is from the artist who performed \"" + getHint(still.getAnswer()) + "\"");
     
   }

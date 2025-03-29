@@ -54,4 +54,8 @@ public class VideoStill {
     public void setPath(String path) {
         this.path = path;
     }
+    
+    public String getPath() {
+        return this.path;
+    }
 }

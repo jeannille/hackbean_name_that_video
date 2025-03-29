@@ -36,6 +36,9 @@ public class GameBuilder {
         imageNames.add("Waterfalls");
 
         File dir = new File("src/model/images");
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
 
         ArrayList<String> extension = new ArrayList<String>();
 
