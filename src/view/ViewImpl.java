@@ -15,14 +15,14 @@ public class ViewImpl implements View {
   private JPanel controlPanel;
 
   public ViewImpl() {
+    // Ensure we're not in headless mode
+    System.setProperty("java.awt.headless", "false");
+    
     mainFrame = new JFrame("Name That 90's Video!");
     mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     mainPanel = new JPanel(new BorderLayout(10, 10));
-    Font defaultFont = new Font(Font.DIALOG, Font.PLAIN, 12);
-    UIManager.put("Button.font", defaultFont);
-    UIManager.put("Label.font", defaultFont);
-    UIManager.put("TextField.font", defaultFont);
     setupUI();
+    mainFrame.setVisible(true);
   }
 
   private void setupUI() {
