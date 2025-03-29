@@ -2,6 +2,7 @@ package model;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.util.Map;
 
 public interface NameThatVideo {
 
