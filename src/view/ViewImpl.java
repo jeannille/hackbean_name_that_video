@@ -15,22 +15,10 @@ public class ViewImpl implements View {
   private JPanel controlPanel;
 
   public ViewImpl() {
-    // Ensure we have a display
-    System.setProperty("java.awt.headless", "false");
-    
     mainFrame = new JFrame("Name That 90's Video!");
     mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     mainPanel = new JPanel(new BorderLayout(10, 10));
-    
-    // Basic UI setup without system fonts
-    try {
-      UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-    
     setupUI();
-    mainFrame.setVisible(true);
   }
 
   private void setupUI() {

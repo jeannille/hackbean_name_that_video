@@ -21,11 +21,15 @@ args = "export DISPLAY=:0"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "Xvfb :0 -screen 0 1024x768x24 &"
+args = "Xvfb :0 -screen 0 1024x768x24 -ac &"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "sleep 1"
+args = "sleep 2"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "xhost +"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
