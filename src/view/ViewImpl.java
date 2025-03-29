@@ -20,10 +20,17 @@ public class ViewImpl implements View {
     public ViewImpl() {
         scanner = new Scanner(System.in);
         setupGUI();
+        // Wait for GUI components to be initialized
+        try {
+            SwingUtilities.invokeAndWait(() -> {});
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void setupGUI() {
-        SwingUtilities.invokeLater(() -> {
+        try {
+            SwingUtilities.invokeAndWait(() -> {
             frame = new JFrame("Name That 90's Video!");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setSize(800, 600);
@@ -41,7 +48,10 @@ public class ViewImpl implements View {
             frame.pack();
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
-        });
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
