@@ -3,6 +3,7 @@ package view;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import model.VideoStill;
 
 public class ViewImpl implements View {
@@ -11,6 +12,7 @@ public class ViewImpl implements View {
   private JTextField guessField;
   private JLabel scoreLabel;
   private JLabel imageLabel;
+  private JPanel controlPanel;
 
   public ViewImpl() {
     mainFrame = new JFrame("Name That 90's Video!");
@@ -24,20 +26,12 @@ public class ViewImpl implements View {
     imageLabel = new JLabel();
     imageLabel.setPreferredSize(new Dimension(400, 300));
     
-    JPanel controlPanel = new JPanel(new FlowLayout());
+    controlPanel = new JPanel(new FlowLayout());
     guessField = new JTextField(20);
     JButton submitButton = new JButton("Submit Guess");
     submitButton.setActionCommand("submit");
     
     scoreLabel = new JLabel("Score: 0");
-    
-    public void addSubmitListener(ActionListener listener) {
-        for (Component c : controlPanel.getComponents()) {
-            if (c instanceof JButton && ((JButton)c).getActionCommand().equals("submit")) {
-                ((JButton)c).addActionListener(listener);
-            }
-        }
-    }
     
     controlPanel.add(guessField);
     controlPanel.add(submitButton);
@@ -48,6 +42,14 @@ public class ViewImpl implements View {
     
     mainFrame.add(mainPanel);
     mainFrame.pack();
+  }
+
+  public void addSubmitListener(ActionListener listener) {
+    for (Component c : controlPanel.getComponents()) {
+      if (c instanceof JButton && ((JButton)c).getActionCommand().equals("submit")) {
+        ((JButton)c).addActionListener(listener);
+      }
+    }
   }
 
   @Override
