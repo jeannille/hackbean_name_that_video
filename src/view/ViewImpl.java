@@ -19,9 +19,11 @@ public class ViewImpl implements View {
     mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     mainPanel = new JPanel(new BorderLayout(10, 10));
     try {
-      UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+      UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+      // Initialize basic fonts
+      System.setProperty("awt.useSystemAAFontSettings", "on");
+      System.setProperty("swing.aatext", "true");
     } catch (Exception e) {
-      // Fallback to default look and feel if cross platform L&F fails
       System.err.println("Could not set look and feel: " + e.getMessage());
     }
     setupUI();
