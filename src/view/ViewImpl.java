@@ -18,8 +18,12 @@ public class ViewImpl implements View {
     mainFrame = new JFrame("Name That 90's Video!");
     mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     mainPanel = new JPanel(new BorderLayout(10, 10));
-    // Set default font
-    UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+    try {
+      UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+    } catch (Exception e) {
+      // Fallback to default look and feel if cross platform L&F fails
+      System.err.println("Could not set look and feel: " + e.getMessage());
+    }
     setupUI();
   }
 
