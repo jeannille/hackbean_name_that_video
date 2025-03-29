@@ -1,147 +1,104 @@
-
 package view;
 
-import javax.swing.*;
-import javax.swing.plaf.FontUIResource;
 import java.awt.*;
-import java.awt.event.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
+import java.awt.event.ActionListener;
+import javax.swing.*;
 import model.VideoStill;
 
 public class ViewImpl implements View {
-    private JFrame frame;
-    private JPanel mainPanel;
-    private JLabel imageLabel;
-    private JTextField guessField;
-    private JLabel scoreLabel;
-    private JLabel hintLabel;
-    private int score = 0;
-    private String lastGuess = "";
-    private boolean guessEntered = false;
+  private JFrame mainFrame;
+  private JLabel imageLabel;
+  private JTextField guessField;
+  private JLabel scoreLabel;
+  private JButton submitButton;
 
-    public ViewImpl() {
-        // Set headless mode property
-        System.setProperty("java.awt.headless", "false");
-        
-        // Create and setup the window
-        frame = new JFrame("Name That 90's Video Game");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(800, 600);
-        
-        // Use system default font
-        UIManager.put("Label.font", new Font(Font.SANS_SERIF, Font.PLAIN, 12));
-        UIManager.put("TextField.font", new Font(Font.SANS_SERIF, Font.PLAIN, 12));
+  public ViewImpl() {
+    // Initialize components in a simpler way, similar to the working example
+    SwingUtilities.invokeLater(() -> {
+      try {
+        // Set up the main frame similar to the working example
+        mainFrame = new JFrame("Name That 90's Video!");
+        mainFrame.setLayout(new BorderLayout());
+        mainFrame.setSize(500, 400);
+        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // Create main panel with BorderLayout
-        mainPanel = new JPanel(new BorderLayout(10, 10));
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-
-        // Create image label
+        // Create image panel with a simple border
         imageLabel = new JLabel();
+        imageLabel.setPreferredSize(new Dimension(400, 300));
+        imageLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         imageLabel.setHorizontalAlignment(JLabel.CENTER);
-        mainPanel.add(imageLabel, BorderLayout.CENTER);
+        imageLabel.setVerticalAlignment(JLabel.CENTER);
 
-        // Create score label
+        // Create a simple panel for controls
+        JPanel controlPanel = new JPanel(new FlowLayout());
+        guessField = new JTextField(20);
+        submitButton = new JButton("Submit");
+        submitButton.setActionCommand("submit");
         scoreLabel = new JLabel("Score: 0");
-        scoreLabel.setFont(new Font("Arial", Font.BOLD, 16));
-
-        // Create hint label
-        hintLabel = new JLabel();
-        hintLabel.setFont(new Font("Arial", Font.ITALIC, 14));
-
-        // Create input panel
-        JPanel inputPanel = new JPanel(new BorderLayout(5, 5));
-        guessField = new JTextField();
-        guessField.addActionListener(e -> {
-            lastGuess = guessField.getText();
-            guessEntered = true;
-            guessField.setText("");
-        });
 
         // Add components to panels
-        JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.add(scoreLabel, BorderLayout.WEST);
-        topPanel.add(hintLabel, BorderLayout.EAST);
-        mainPanel.add(topPanel, BorderLayout.NORTH);
-        inputPanel.add(new JLabel("Enter your guess: "), BorderLayout.WEST);
-        inputPanel.add(guessField, BorderLayout.CENTER);
-        mainPanel.add(inputPanel, BorderLayout.SOUTH);
+        controlPanel.add(guessField);
+        controlPanel.add(submitButton);
+        controlPanel.add(scoreLabel);
 
-        frame.add(mainPanel);
-        frame.setLocationRelativeTo(null);
+        // Add panels to frame
+        mainFrame.add(imageLabel, BorderLayout.CENTER);
+        mainFrame.add(controlPanel, BorderLayout.SOUTH);
+      } catch (Exception e) {
+        System.err.println("Error in ViewImpl constructor: " + e.getMessage());
+        e.printStackTrace();
+      }
+    });
+  }
+
+  // This is the only method required by the View interface
+  @Override
+  public void render() {
+    SwingUtilities.invokeLater(() -> {
+      if (mainFrame != null) {
+        mainFrame.setLocationRelativeTo(null);
+        mainFrame.setVisible(true);
+      }
+    });
+  }
+
+  // Additional methods needed for the game functionality
+  // These are not in the View interface but are used by the controller
+
+  public void addSubmitListener(ActionListener listener) {
+    if (submitButton != null) {
+      submitButton.addActionListener(listener);
     }
+  }
 
-    @Override
-    public void render() {
-        frame.setVisible(true);
-    }
-
-    public void updateImage(VideoStill still) {
+  public void updateImage(VideoStill still) {
+    SwingUtilities.invokeLater(() -> {
+      if (imageLabel != null && still != null && still.getImage() != null) {
         try {
-            File imageFile = new File(still.getPath());
-            BufferedImage img = ImageIO.read(imageFile);
-            Image scaledImg = img.getScaledInstance(600, 400, Image.SCALE_SMOOTH);
-            imageLabel.setIcon(new ImageIcon(scaledImg));
-            hintLabel.setText("Hint: The song is from the artist who performed \"" + getHint(still.getAnswer()) + "\"");
-            frame.revalidate();
-            frame.repaint();
-        } catch (IOException e) {
-            System.err.println("Error loading image: " + e.getMessage());
+          ImageIcon icon = new ImageIcon(still.getImage());
+          // Simple scaling to fit the label
+          Image scaled = icon.getImage().getScaledInstance(
+              Math.min(400, still.getImage().getWidth()), 
+              Math.min(300, still.getImage().getHeight()), 
+              Image.SCALE_SMOOTH);
+          imageLabel.setIcon(new ImageIcon(scaled));
+        } catch (Exception e) {
+          System.err.println("Error updating image: " + e.getMessage());
+          e.printStackTrace();
         }
-    }
+      }
+    });
+  }
 
-    private String getHint(String videoName) {
-        // Keep existing hint logic
-        if (videoName.equals("Are You That Somebody?")) {
-            return "Try Again";
-        } else if (videoName.equals("Bootylicious")) {
-            return "Independent Women";
-        } else if (videoName.equals("Don't Speak")) {
-            return "Just a Girl";
-        } else if (videoName.equals("I Saw the Sign")) {
-            return "The Sign";
-        } else if (videoName.equals("I Want It That Way")) {
-            return "Everybody (Backstreet's Back)";
-        } else if (videoName.equals("I Want to Dance with Somebody")) {
-            return "Greatest Love of All";
-        } else if (videoName.equals("Kiss from A Rose")) {
-            return "Crazy";
-        } else if (videoName.equals("No Strings Attached")) {
-            return "Bye Bye Bye";
-        } else if (videoName.equals("Say My Name")) {
-            return "Bills, Bills, Bills";
-        } else if (videoName.equals("Smells Like Teen Spirit")) {
-            return "Come As You Are";
-        } else if (videoName.equals("Vogue")) {
-            return "Like a Prayer";
-        } else if (videoName.equals("Waterfalls")) {
-            return "No Scrubs";
-        } else {
-            return "another hit song";
-        }
-    }
-
-    public void updateScore(int score) {
-        this.score = score;
+  public void updateScore(int score) {
+    SwingUtilities.invokeLater(() -> {
+      if (scoreLabel != null) {
         scoreLabel.setText("Score: " + score);
-    }
+      }
+    });
+  }
 
-    public String getGuess() {
-        if (guessEntered) {
-            guessEntered = false;
-            return lastGuess;
-        }
-        return null;
-    }
-
-    public boolean hasNewGuess() {
-        return guessEntered;
-    }
-
-    public void close() {
-        frame.dispose();
-    }
+  public String getGuess() {
+    return (guessField != null) ? guessField.getText() : "";
+  }
 }

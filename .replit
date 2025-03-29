@@ -13,7 +13,7 @@ runButton = "Run Java"
 [[workflows.workflow]]
 name = "Run Java"
 author = 39251440
-mode = "sequential"
+mode = "parallel"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
