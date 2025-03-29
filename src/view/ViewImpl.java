@@ -23,20 +23,25 @@ public class ViewImpl implements View {
     }
 
     private void setupGUI() {
-        frame = new JFrame("Name That 90's Video!");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(800, 600);
-        
-        imageLabel = new JLabel();
-        imageLabel.setHorizontalAlignment(JLabel.CENTER);
-        
-        textArea = new JTextArea();
-        textArea.setEditable(false);
-        
-        frame.setLayout(new BorderLayout());
-        frame.add(imageLabel, BorderLayout.CENTER);
-        frame.add(textArea, BorderLayout.SOUTH);
-        frame.setVisible(true);
+        SwingUtilities.invokeLater(() -> {
+            frame = new JFrame("Name That 90's Video!");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setSize(800, 600);
+            
+            imageLabel = new JLabel();
+            imageLabel.setHorizontalAlignment(JLabel.CENTER);
+            
+            textArea = new JTextArea();
+            textArea.setEditable(false);
+            
+            frame.setLayout(new BorderLayout());
+            frame.add(imageLabel, BorderLayout.CENTER);
+            frame.add(textArea, BorderLayout.SOUTH);
+            
+            frame.pack();
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+        });
     }
 
     @Override

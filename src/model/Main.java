@@ -8,6 +8,7 @@ public class Main {
             // Set necessary system properties for headless AWT
             System.setProperty("java.awt.headless", "false");
             System.setProperty("awt.toolkit", "sun.awt.X11.XToolkit");
+            System.setProperty("DISPLAY", ":0");
 
             // Create components
             NameThatVideoImpl model = new NameThatVideoImpl();
