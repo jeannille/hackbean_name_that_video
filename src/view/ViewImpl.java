@@ -18,14 +18,10 @@ public class ViewImpl implements View {
     mainFrame = new JFrame("Name That 90's Video!");
     mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     mainPanel = new JPanel(new BorderLayout(10, 10));
-    try {
-      UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
-      // Initialize basic fonts
-      System.setProperty("awt.useSystemAAFontSettings", "on");
-      System.setProperty("swing.aatext", "true");
-    } catch (Exception e) {
-      System.err.println("Could not set look and feel: " + e.getMessage());
-    }
+    Font defaultFont = new Font(Font.DIALOG, Font.PLAIN, 12);
+    UIManager.put("Button.font", defaultFont);
+    UIManager.put("Label.font", defaultFont);
+    UIManager.put("TextField.font", defaultFont);
     setupUI();
   }
 
