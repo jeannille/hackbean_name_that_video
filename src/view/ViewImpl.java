@@ -35,7 +35,7 @@ public class ViewImpl implements View {
                 <!DOCTYPE html>
                 <html>
                 <head>
-                    <title>Name That 90's Video!</title>
+                    <title>Name That 90's Video?!</title>
                     <style>
                         body { font-family: Arial; text-align: center; padding: 20px; }
                         img { max-width: 400px; max-height: 300px; margin: 20px; }
