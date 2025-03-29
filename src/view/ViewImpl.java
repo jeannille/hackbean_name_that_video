@@ -54,7 +54,10 @@ public class ViewImpl implements View {
 
   @Override
   public void render() {
+    mainFrame.setLocationRelativeTo(null);
     mainFrame.setVisible(true);
+    // Ensure the frame is properly sized
+    mainFrame.pack();
   }
 
   public void updateImage(VideoStill still) {
