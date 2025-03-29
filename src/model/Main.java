@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Map;
 import java.util.Scanner;
+import view.ViewImpl;
 
 public class Main {
 
