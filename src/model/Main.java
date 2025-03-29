@@ -5,10 +5,11 @@ import view.ViewImpl;
 public class Main {
     public static void main(String[] args) {
         try {
-            // Set necessary system properties for headless AWT
+            // Configure GUI environment
             System.setProperty("java.awt.headless", "false");
             System.setProperty("awt.toolkit", "sun.awt.X11.XToolkit");
-            System.setProperty("DISPLAY", ":0");
+            System.setProperty("DISPLAY", ":1");
+            System.setProperty("java.awt.graphicsenv", "sun.awt.X11GraphicsEnvironment");
 
             // Create components
             NameThatVideoImpl model = new NameThatVideoImpl();

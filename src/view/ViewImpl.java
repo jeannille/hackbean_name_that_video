@@ -19,18 +19,15 @@ public class ViewImpl implements View {
 
     public ViewImpl() {
         scanner = new Scanner(System.in);
+        // Initialize GUI components first
+        frame = new JFrame("Name That 90's Video!");
+        imageLabel = new JLabel();
+        textArea = new JTextArea();
         setupGUI();
-        // Wait for GUI components to be initialized
-        try {
-            SwingUtilities.invokeAndWait(() -> {});
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     private void setupGUI() {
-        try {
-            SwingUtilities.invokeAndWait(() -> {
+        EventQueue.invokeLater(() -> {
             frame = new JFrame("Name That 90's Video!");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setSize(800, 600);
