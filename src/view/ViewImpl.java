@@ -45,7 +45,7 @@ public class ViewImpl implements View {
                 <!DOCTYPE html>
                 <html>
                 <head>
-                    <title>Name That 90's Video?!</title>
+                    <title>Name That 90's Video!</title>
                     <style>
                         body { font-family: Arial; text-align: center; padding: 20px; }
                         .image-container { width: 400px; height: 300px; margin: 20px auto; border: 2px solid #ccc; 
@@ -101,22 +101,70 @@ public class ViewImpl implements View {
         }
     }
 
-    private String currentGuess = "";
+    private String lastGuess = "";
+    private boolean guessEntered = false;
+
+    // Add this field to your ViewImpl class
+    private boolean lastGuessCorrect = false;
 
     class GuessHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
-            String query = exchange.getRequestURI().getQuery();
-            currentGuess = java.net.URLDecoder.decode(query.split("=")[1], "UTF-8");
-            
-            if (submitListener != null) {
-                submitListener.actionPerformed(null);
-            }
-            
-            String response = "incorrect";
-            exchange.sendResponseHeaders(200, response.length());
-            try (OutputStream os = exchange.getResponseBody()) {
-                os.write(response.getBytes());
+            try {
+                String query = exchange.getRequestURI().getQuery();
+                String guess = "";
+
+                if (query != null && query.startsWith("guess=")) {
+                    guess = java.net.URLDecoder.decode(query.substring(6), "UTF-8");
+                    System.out.println("Received guess: " + guess);
+
+                    // Store the guess for the controller (still needed for score updates)
+                    lastGuess = guess;
+                    guessEntered = true;
+
+                    // Directly check if guess is correct
+                    boolean isCorrect = false;
+                    if (currentStill != null) {
+                        String normalizedGuess = guess.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
+                        String normalizedAnswer = currentStill.getAnswer().replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
+                        isCorrect = normalizedGuess.equals(normalizedAnswer);
+                        System.out.println("Comparing: '" + normalizedGuess + "' with '" + normalizedAnswer + "' - Match: " + isCorrect);
+                    }
+
+                    // Trigger controller processing (for score updates and next image)
+                    if (submitListener != null) {
+                        submitListener.actionPerformed(null);
+                    }
+
+                    // Determine HTTP response
+                    String response = isCorrect ? "correct" : "incorrect";
+                    System.out.println("Sending HTTP response: " + response);
+
+                    exchange.getResponseHeaders().set("Content-Type", "text/plain");
+                    exchange.sendResponseHeaders(200, response.length());
+                    try (OutputStream os = exchange.getResponseBody()) {
+                        os.write(response.getBytes());
+                    }
+                    return; // Exit early after processing
+                }
+
+                // If we get here, no valid guess was provided
+                String response = "error: no valid guess provided";
+                exchange.getResponseHeaders().set("Content-Type", "text/plain");
+                exchange.sendResponseHeaders(400, response.length());
+                try (OutputStream os = exchange.getResponseBody()) {
+                    os.write(response.getBytes());
+                }
+            } catch (Exception e) {
+                String errorMsg = "Error processing guess: " + e.getMessage();
+                System.err.println(errorMsg);
+                e.printStackTrace();
+
+                exchange.getResponseHeaders().set("Content-Type", "text/plain");
+                exchange.sendResponseHeaders(500, errorMsg.length());
+                try (OutputStream os = exchange.getResponseBody()) {
+                    os.write(errorMsg.getBytes());
+                }
             }
         }
     }
@@ -138,7 +186,29 @@ public class ViewImpl implements View {
         this.score = score;
     }
 
+    // Update the getGuess method to return the actual guess
     public String getGuess() {
-        return currentGuess;
+        if (guessEntered) {
+            guessEntered = false;
+            return lastGuess;
+        }
+        return null;
     }
+
+    // Add this method for the controller to check if there's a new guess
+    public boolean hasNewGuess() {
+        return guessEntered;
+    }
+
+    // Add this method to your ViewImpl class
+    public void close() {
+        if (server != null) {
+            server.stop(0); // Stop the server with a 0-second delay
+            System.out.println("Server stopped");
+        }
+    }
+
+
+
+    
 }

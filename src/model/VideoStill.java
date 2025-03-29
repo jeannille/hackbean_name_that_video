@@ -15,7 +15,6 @@ public class VideoStill {
         if (img == null || answer.equals("")) {
             throw new IllegalArgumentException("not valid");
         }
-
         this.answer = answer;
         this.img = img;
         //this.imgId = imgId;
