@@ -75,10 +75,27 @@ public class GameBuilder {
             }
         }
 
+        // Read paths from data.txt
+        Map<String, String> pathMap = new HashMap<>();
+        try {
+            Scanner scanner = new Scanner(new File("data.txt"));
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                String[] parts = line.split(",");
+                if (parts.length == 2) {
+                    pathMap.put(parts[0], parts[1]);
+                }
+            }
+            scanner.close();
+        } catch (FileNotFoundException e) {
+            System.err.println("Warning: data.txt not found");
+        }
+
         //matching file name and image in map for videoStill
         for (int i = 0; i < images.size(); i++) {
-            imageMap.put(imageNames.get(i), new VideoStill(images.get(i), imageNames.get(i)));
-            //System.out.println(i);
+            VideoStill vs = new VideoStill(images.get(i), imageNames.get(i));
+            vs.setPath(pathMap.getOrDefault(imageNames.get(i), ""));
+            imageMap.put(imageNames.get(i), vs);
         }
 
         //matching file name and file path in map
