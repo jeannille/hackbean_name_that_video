@@ -27,8 +27,17 @@ public class ViewImpl implements View {
     JPanel controlPanel = new JPanel(new FlowLayout());
     guessField = new JTextField(20);
     JButton submitButton = new JButton("Submit Guess");
+    submitButton.setActionCommand("submit");
     
     scoreLabel = new JLabel("Score: 0");
+    
+    public void addSubmitListener(ActionListener listener) {
+        for (Component c : controlPanel.getComponents()) {
+            if (c instanceof JButton && ((JButton)c).getActionCommand().equals("submit")) {
+                ((JButton)c).addActionListener(listener);
+            }
+        }
+    }
     
     controlPanel.add(guessField);
     controlPanel.add(submitButton);
