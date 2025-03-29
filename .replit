@@ -17,20 +17,8 @@ mode = "sequential"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "export DISPLAY=:0"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "Xvfb :0 -screen 0 1024x768x24 &"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "sleep 1"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
 args = "javac -d . src/**/*.java"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "java -Djava.awt.headless=false model.Main"
+args = "java -Djava.awt.headless=true model.Main"
