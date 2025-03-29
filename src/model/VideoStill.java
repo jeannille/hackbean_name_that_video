@@ -15,7 +15,6 @@ public class VideoStill {
         if (img == null || answer.equals("")) {
             throw new IllegalArgumentException("not valid");
         }
-
         this.answer = answer;
         this.img = img;
         //this.imgId = imgId;
@@ -53,5 +52,9 @@ public class VideoStill {
 
     public void setPath(String path) {
         this.path = path;
+    }
+    
+    public String getPath() {
+        return this.path;
     }
 }

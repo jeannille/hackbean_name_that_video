@@ -1,43 +1,31 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.Scanner;
-
+import view.ViewImpl;
 
 public class Play {
     private VideoStill still;
     private String guess;
     private Player player;
+    private ViewImpl view;
 
-
-    /**
-     * Constructor for an instance that relates the video still image and player interaction.
-     * @param still
-     * @param player
-     */
-    public Play(VideoStill still, Player player){
-        //kick still to to view here?
+    public Play(VideoStill still, Player player, ViewImpl view) {
         this.still = still;
         this.player = player;
+        this.view = view;
+        view.updateImage(still);
     }
 
-    public void setGuess() {
-        Scanner getGuess = new Scanner(System.in);
-        System.out.println("Enter your guess: ");
-        String guess = getGuess.nextLine();
+    public void setGuess(String guess) {
         this.guess = guess;
     }
 
-    /**
-     * Verifies player answer, removes VideoStill from playing deck and increments player score.
-     */
-    public void isCorrectGuess() {
-        if (guess.equalsIgnoreCase(still.getAnswer())){
+    public boolean isCorrectGuess() {
+        if (guess.equalsIgnoreCase(still.getAnswer())) {
             this.still.notPlayable();
             this.player.incrementScore();
+            view.updateScore(player.getScore());
+            return true;
         }
+        return false;
     }
-
-
-
 }

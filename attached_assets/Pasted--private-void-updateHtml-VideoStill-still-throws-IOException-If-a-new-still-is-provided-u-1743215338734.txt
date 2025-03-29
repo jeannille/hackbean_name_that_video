@@ -1,0 +1,57 @@
+ private void updateHtml(VideoStill still) throws IOException {
+    // If a new still is provided, update the current reference
+    if (still != null) {
+      currentStill = still;
+    }
+    
+    // Create basic HTML page with image
+    StringBuilder html = new StringBuilder();
+    html.append("<!DOCTYPE html>\n");
+    html.append("<html>\n");
+    html.append("<head>\n");
+    html.append("  <title>Name That 90's Video!</title>\n");
+    html.append("  <meta http-equiv=\"refresh\" content=\"3\">\n"); // Auto-refresh every 3 seconds
+    html.append("  <style>\n");
+    html.append("    body { font-family: Arial, sans-serif; text-align: center; background-color: #f0f0f0; }\n");
+    html.append("    .container { max-width: 800px; margin: 0 auto; padding: 20px; background-color: white; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }\n");
+    html.append("    .image-container { width: 400px; height: 300px; margin: 20px auto; border: 2px solid #ccc; background-color: #eee; display: flex; align-items: center; justify-content: center; }\n");
+    html.append("    .score { font-size: 24px; margin: 20px 0; }\n");
+    html.append("    img { max-width: 100%; max-height: 100%; }\n");
+    html.append("  </style>\n");
+    html.append("</head>\n");
+    html.append("<body>\n");
+    html.append("  <div class=\"container\">\n");
+    html.append("    <h1>Name That 90's Video!</h1>\n");
+    html.append("    <div class=\"score\">Score: ").append(score).append("</div>\n");
+    html.append("    <div class=\"image-container\">\n");
+    
+    if (currentStill != null && currentStill.getImage() != null) {
+      try {
+        // Convert BufferedImage to base64 for embedding in HTML
+        String base64Image = imageToBase64(currentStill.getImage());
+        html.append("      <img src=\"data:image/png;base64,").append(base64Image).append("\">\n");
+      } catch (Exception e) {
+        html.append("      <p>Error displaying image: ").append(e.getMessage()).append("</p>\n");
+      }
+    } else {
+      html.append("      <p>Waiting for game to start...</p>\n");
+    }
+    
+    html.append("    </div>\n");
+    html.append("    <p>Enter your guess in the console window!</p>\n");
+    html.append("  </div>\n");
+    html.append("</body>\n");
+    html.append("</html>");
+    
+    // Write to file
+    try (FileOutputStream fos = new FileOutputStream(htmlFile)) {
+      fos.write(html.toString().getBytes());
+    }
+  }
+  
+  private String imageToBase64(BufferedImage image) throws IOException {
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    ImageIO.write(image, "png", outputStream);
+    return Base64.getEncoder().encodeToString(outputStream.toByteArray());
+  }
+  
