@@ -6,6 +6,8 @@ import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.util.Base64;
+import javax.imageio.ImageIO;
 import java.net.InetSocketAddress;
 import model.VideoStill;
 
@@ -31,6 +33,14 @@ public class ViewImpl implements View {
     class MainHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
+            // Convert image to base64
+            String imageData = "";
+            if (currentStill != null && currentStill.getImage() != null) {
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                ImageIO.write(currentStill.getImage(), "png", outputStream);
+                imageData = Base64.getEncoder().encodeToString(outputStream.toByteArray());
+            }
+
             String html = String.format("""
                 <!DOCTYPE html>
                 <html>
@@ -38,15 +48,17 @@ public class ViewImpl implements View {
                     <title>Name That 90's Video?!</title>
                     <style>
                         body { font-family: Arial; text-align: center; padding: 20px; }
-                        img { max-width: 400px; max-height: 300px; margin: 20px; }
+                        .image-container { width: 400px; height: 300px; margin: 20px auto; border: 2px solid #ccc; 
+                                         display: flex; align-items: center; justify-content: center; }
+                        img { max-width: 100%%; max-height: 100%%; }
                         input { padding: 5px; margin: 10px; }
                         button { padding: 5px 15px; }
                     </style>
                 </head>
                 <body>
                     <h1>Name That 90's Video!</h1>
-                    <div>
-                        <img src="%s" alt="Video Still">
+                    <div class="image-container">
+                        <img src="data:image/png;base64,%s" alt="Video Still">
                     </div>
                     <div>
                         <p><strong>Hint:</strong> This song came out in the 90s and was a huge hit!</p>

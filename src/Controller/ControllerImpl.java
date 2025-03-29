@@ -28,7 +28,9 @@ public class ControllerImpl implements IController {
     private void setupActionListeners() {
         view.addSubmitListener(e -> {
             String guess = view.getGuess();
-            if (guess.equalsIgnoreCase(videoNames[currentIndex])) {
+            String normalizedGuess = guess.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
+            String normalizedAnswer = videoNames[currentIndex].replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
+            if (normalizedGuess.equals(normalizedAnswer)) {
                 view.updateScore(currentIndex + 1);
                 currentIndex++;
                 if (currentIndex < videoNames.length) {
