@@ -1,4 +1,3 @@
-
 package model;
 import Controller.ControllerImpl;
 import view.ViewImpl;
@@ -6,21 +5,28 @@ import view.ViewImpl;
 public class Main {
     public static void main(String[] args) {
         try {
-            // Configure GUI environment
+            // Set critical system properties
             System.setProperty("java.awt.headless", "false");
-            System.setProperty("awt.toolkit", "sun.awt.X11.XToolkit");
-            System.setProperty("DISPLAY", ":0");
-            System.setProperty("java.awt.graphicsenv", "sun.awt.X11GraphicsEnvironment");
-            System.setProperty("swing.defaultlaf", "javax.swing.plaf.metal.MetalLookAndFeel");
-            System.setProperty("sun.font.fontmanager", "sun.awt.X11FontManager");
-            System.setProperty("sun.java2d.xrender", "false");
 
-            // Create components
+            // Explicitly disable font use
+            System.setProperty("sun.java2d.font.DisableCanvasAccess", "true");
+
+            // Explicitly set X11 backend
+            System.setProperty("awt.toolkit", "sun.awt.X11.XToolkit");
+
+            // Create model first
             NameThatVideoImpl model = new NameThatVideoImpl();
+
+            // Wait before creating view
+            Thread.sleep(2000);
+
+            // Create view
             ViewImpl view = new ViewImpl();
+
+            // Create controller
             ControllerImpl controller = new ControllerImpl(model, view);
 
-            // Start the application
+            // Start application
             controller.progress();
         } catch (Exception e) {
             System.err.println("Error in main: " + e.getMessage());
