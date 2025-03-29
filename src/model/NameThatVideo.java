@@ -22,6 +22,8 @@ public interface NameThatVideo {
 
     void removePlayer();
 
+    Map<String, VideoStill> getMap();
+
 
 
 
