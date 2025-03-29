@@ -61,7 +61,7 @@ public class ViewImpl implements View {
                         <img src="data:image/png;base64,%s" alt="Video Still">
                     </div>
                     <div>
-                        <p><strong>Hint:</strong> This song came out in the 90s and was a huge hit!</p>
+                        <p><strong>Hint:</strong> %s</p>
                     </div>
                     <div>
                         <input type="text" id="guess" placeholder="Enter your guess">
@@ -88,6 +88,7 @@ public class ViewImpl implements View {
                 </html>
                 """, 
                 imageData,
+                getHint(currentStill != null ? currentStill.getAnswer() : ""),
                 score
             );
             
@@ -96,6 +97,38 @@ public class ViewImpl implements View {
             try (OutputStream os = exchange.getResponseBody()) {
                 os.write(html.getBytes());
             }
+        }
+    }
+
+    private String getHint(String videoName) {
+        // Provide a hint based on the correct answer
+        switch (videoName) {
+            case "Are You That Somebody?":
+                return "This artist collaborated with Timbaland on many hits and was tragically killed in a plane crash in 2001.";
+            case "Bootylicious":
+                return "This girl group had numerous hits including 'Independent Women' and 'Say My Name'.";
+            case "Don't Speak":
+                return "This band featured Gwen Stefani as the lead vocalist before she went solo.";
+            case "I Saw the Sign":
+                return "This Swedish pop group had a string of hits in the 90s and were known for their harmonies.";
+            case "I Want It That Way":
+                return "This boy band's name references a defensive position in basketball.";
+            case "I Want to Dance with Somebody":
+                return "Known as 'The Voice', this artist had the highest-selling debut album for a female artist at the time.";
+            case "Kiss from A Rose":
+                return "This British singer contributed this song to the soundtrack of 'Batman Forever'.";
+            case "No Strings Attached":
+                return "This boy band featuring Justin Timberlake had hits like 'Bye Bye Bye'.";
+            case "Say My Name":
+                return "This R&B girl group's name refers to something that grows on a plant.";
+            case "Smells Like Teen Spirit":
+                return "This grunge band from Seattle was fronted by Kurt Cobain.";
+            case "Vogue":
+                return "This iconic artist is known as the 'Queen of Pop' and has reinvented herself multiple times.";
+            case "Waterfalls":
+                return "This R&B group warned against 'chasing waterfalls' in this hit song.";
+            default:
+                return "This was a popular music video from the 90sss.";
         }
     }
 
