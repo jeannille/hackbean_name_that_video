@@ -2,6 +2,7 @@
 package view;
 
 import javax.swing.*;
+import javax.swing.plaf.FontUIResource;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -22,10 +23,17 @@ public class ViewImpl implements View {
     private boolean guessEntered = false;
 
     public ViewImpl() {
+        // Set headless mode property
+        System.setProperty("java.awt.headless", "false");
+        
         // Create and setup the window
         frame = new JFrame("Name That 90's Video Game");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
+        
+        // Use system default font
+        UIManager.put("Label.font", new Font(Font.SANS_SERIF, Font.PLAIN, 12));
+        UIManager.put("TextField.font", new Font(Font.SANS_SERIF, Font.PLAIN, 12));
 
         // Create main panel with BorderLayout
         mainPanel = new JPanel(new BorderLayout(10, 10));
