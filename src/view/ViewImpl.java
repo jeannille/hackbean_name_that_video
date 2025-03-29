@@ -49,6 +49,9 @@ public class ViewImpl implements View {
                         <img src="%s" alt="Video Still">
                     </div>
                     <div>
+                        <p><strong>Hint:</strong> This song came out in the 90s and was a huge hit!</p>
+                    </div>
+                    <div>
                         <input type="text" id="guess" placeholder="Enter your guess">
                         <button onclick="submitGuess()">Submit</button>
                     </div>
