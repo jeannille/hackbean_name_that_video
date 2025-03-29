@@ -2,6 +2,7 @@ package model;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.util.Map;
 
 public interface NameThatVideo {
 
@@ -21,6 +22,8 @@ public interface NameThatVideo {
     void addPlayer();
 
     void removePlayer();
+
+    Map<String, VideoStill> getMap();
 
 
 
