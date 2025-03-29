@@ -1,104 +1,124 @@
+
 package view;
 
-import java.awt.*;
-import java.awt.event.ActionListener;
-import javax.swing.*;
+import com.sun.net.httpserver.HttpServer;
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpExchange;
 import model.VideoStill;
+import javax.imageio.ImageIO;
+import java.awt.event.ActionListener;
+import java.io.*;
+import java.net.InetSocketAddress;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class ViewImpl implements View {
-  private JFrame mainFrame;
-  private JLabel imageLabel;
-  private JTextField guessField;
-  private JLabel scoreLabel;
-  private JButton submitButton;
+    private HttpServer server;
+    private VideoStill currentStill;
+    private int score = 0;
+    private ActionListener submitListener;
 
-  public ViewImpl() {
-    // Initialize components in a simpler way, similar to the working example
-    SwingUtilities.invokeLater(() -> {
-      try {
-        // Set up the main frame similar to the working example
-        mainFrame = new JFrame("Name That 90's Video!");
-        mainFrame.setLayout(new BorderLayout());
-        mainFrame.setSize(500, 400);
-        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        // Create image panel with a simple border
-        imageLabel = new JLabel();
-        imageLabel.setPreferredSize(new Dimension(400, 300));
-        imageLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        imageLabel.setHorizontalAlignment(JLabel.CENTER);
-        imageLabel.setVerticalAlignment(JLabel.CENTER);
-
-        // Create a simple panel for controls
-        JPanel controlPanel = new JPanel(new FlowLayout());
-        guessField = new JTextField(20);
-        submitButton = new JButton("Submit");
-        submitButton.setActionCommand("submit");
-        scoreLabel = new JLabel("Score: 0");
-
-        // Add components to panels
-        controlPanel.add(guessField);
-        controlPanel.add(submitButton);
-        controlPanel.add(scoreLabel);
-
-        // Add panels to frame
-        mainFrame.add(imageLabel, BorderLayout.CENTER);
-        mainFrame.add(controlPanel, BorderLayout.SOUTH);
-      } catch (Exception e) {
-        System.err.println("Error in ViewImpl constructor: " + e.getMessage());
-        e.printStackTrace();
-      }
-    });
-  }
-
-  // This is the only method required by the View interface
-  @Override
-  public void render() {
-    SwingUtilities.invokeLater(() -> {
-      if (mainFrame != null) {
-        mainFrame.setLocationRelativeTo(null);
-        mainFrame.setVisible(true);
-      }
-    });
-  }
-
-  // Additional methods needed for the game functionality
-  // These are not in the View interface but are used by the controller
-
-  public void addSubmitListener(ActionListener listener) {
-    if (submitButton != null) {
-      submitButton.addActionListener(listener);
-    }
-  }
-
-  public void updateImage(VideoStill still) {
-    SwingUtilities.invokeLater(() -> {
-      if (imageLabel != null && still != null && still.getImage() != null) {
+    public ViewImpl() {
         try {
-          ImageIcon icon = new ImageIcon(still.getImage());
-          // Simple scaling to fit the label
-          Image scaled = icon.getImage().getScaledInstance(
-              Math.min(400, still.getImage().getWidth()), 
-              Math.min(300, still.getImage().getHeight()), 
-              Image.SCALE_SMOOTH);
-          imageLabel.setIcon(new ImageIcon(scaled));
-        } catch (Exception e) {
-          System.err.println("Error updating image: " + e.getMessage());
-          e.printStackTrace();
+            server = HttpServer.create(new InetSocketAddress("0.0.0.0", 5000), 0);
+            server.createContext("/", new MainHandler());
+            server.createContext("/guess", new GuessHandler());
+            server.setExecutor(null);
+            server.start();
+            System.out.println("Server started on port 5000");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-      }
-    });
-  }
+    }
 
-  public void updateScore(int score) {
-    SwingUtilities.invokeLater(() -> {
-      if (scoreLabel != null) {
-        scoreLabel.setText("Score: " + score);
-      }
-    });
-  }
+    class MainHandler implements HttpHandler {
+        @Override
+        public void handle(HttpExchange exchange) throws IOException {
+            String html = String.format("""
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Name That 90's Video!</title>
+                    <style>
+                        body { font-family: Arial; text-align: center; padding: 20px; }
+                        img { max-width: 400px; max-height: 300px; margin: 20px; }
+                        input { padding: 5px; margin: 10px; }
+                        button { padding: 5px 15px; }
+                    </style>
+                </head>
+                <body>
+                    <h1>Name That 90's Video!</h1>
+                    <div>
+                        <img src="%s" alt="Video Still">
+                    </div>
+                    <div>
+                        <input type="text" id="guess" placeholder="Enter your guess">
+                        <button onclick="submitGuess()">Submit</button>
+                    </div>
+                    <div>Score: %d</div>
+                    <script>
+                        function submitGuess() {
+                            const guess = document.getElementById('guess').value;
+                            fetch('/guess?guess=' + encodeURIComponent(guess))
+                                .then(response => response.text())
+                                .then(result => {
+                                    if (result === 'correct') {
+                                        location.reload();
+                                    } else {
+                                        alert('Try again!');
+                                    }
+                                });
+                        }
+                    </script>
+                </body>
+                </html>
+                """, 
+                currentStill != null ? currentStill.getPath() : "",
+                score
+            );
+            
+            exchange.getResponseHeaders().set("Content-Type", "text/html");
+            exchange.sendResponseHeaders(200, html.length());
+            try (OutputStream os = exchange.getResponseBody()) {
+                os.write(html.getBytes());
+            }
+        }
+    }
 
-  public String getGuess() {
-    return (guessField != null) ? guessField.getText() : "";
-  }
+    class GuessHandler implements HttpHandler {
+        @Override
+        public void handle(HttpExchange exchange) throws IOException {
+            String guess = exchange.getRequestURI().getQuery().split("=")[1];
+            if (submitListener != null) {
+                // Simulate button click event
+                submitListener.actionPerformed(null);
+            }
+            String response = "incorrect";
+            exchange.sendResponseHeaders(200, response.length());
+            try (OutputStream os = exchange.getResponseBody()) {
+                os.write(response.getBytes());
+            }
+        }
+    }
+
+    @Override
+    public void render() {
+        // Server is already running
+    }
+
+    public void addSubmitListener(ActionListener listener) {
+        this.submitListener = listener;
+    }
+
+    public void updateImage(VideoStill still) {
+        this.currentStill = still;
+    }
+
+    public void updateScore(int score) {
+        this.score = score;
+    }
+
+    public String getGuess() {
+        return ""; // Handled through HTTP now
+    }
 }
