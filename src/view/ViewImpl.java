@@ -1,16 +1,13 @@
 
 package view;
 
-import com.sun.net.httpserver.HttpServer;
-import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpExchange;
-import model.VideoStill;
-import javax.imageio.ImageIO;
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpServer;
 import java.awt.event.ActionListener;
 import java.io.*;
 import java.net.InetSocketAddress;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import model.VideoStill;
 
 public class ViewImpl implements View {
     private HttpServer server;
@@ -21,7 +18,6 @@ public class ViewImpl implements View {
     public ViewImpl() {
         try {
             server = HttpServer.create(new InetSocketAddress("0.0.0.0", 5000), 0);
-            System.setProperty("java.awt.headless", "true"); // Avoid AWT/font issues
             server.createContext("/", new MainHandler());
             server.createContext("/guess", new GuessHandler());
             server.setExecutor(null);
@@ -89,15 +85,12 @@ public class ViewImpl implements View {
     class GuessHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
-            String query = exchange.getRequestURI().getQuery();
-            String guess = java.net.URLDecoder.decode(query.split("=")[1], "UTF-8");
-            String response = "incorrect";
-            
+            String guess = exchange.getRequestURI().getQuery().split("=")[1];
             if (submitListener != null) {
+                // Simulate button click event
                 submitListener.actionPerformed(null);
             }
-            
-            exchange.getResponseHeaders().add("Content-Type", "text/plain");
+            String response = "incorrect";
             exchange.sendResponseHeaders(200, response.length());
             try (OutputStream os = exchange.getResponseBody()) {
                 os.write(response.getBytes());
