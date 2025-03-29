@@ -5,14 +5,18 @@ import view.ViewImpl;
 public class Main {
     public static void main(String[] args) {
         try {
-            // Set critical system properties
+            // Basic X11 configuration
             System.setProperty("java.awt.headless", "false");
-
-            // Explicitly disable font use
-            System.setProperty("sun.java2d.font.DisableCanvasAccess", "true");
-
-            // Explicitly set X11 backend
             System.setProperty("awt.toolkit", "sun.awt.X11.XToolkit");
+            
+            // Disable font-related features
+            System.setProperty("sun.java2d.font.DisableCanvasAccess", "true");
+            System.setProperty("sun.awt.fontconfig", "false");
+            System.setProperty("sun.java2d.xrender", "false");
+            
+            // Force simple graphics environment
+            System.setProperty("java.awt.graphicsenv", "sun.awt.X11GraphicsEnvironment");
+            System.setProperty("DISPLAY", ":0");
 
             // Create model first
             NameThatVideoImpl model = new NameThatVideoImpl();
