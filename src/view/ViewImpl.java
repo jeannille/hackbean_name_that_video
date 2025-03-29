@@ -69,9 +69,11 @@ public class ViewImpl implements View {
                     </div>
                     <div>Score: %d</div>
                     <div style="margin-top: 20px; color: #666;">Debug - Current Answer: %s</div>
+                    <div style="margin-top: 10px; color: #666;">Last submitted guess: <span id="lastGuess">None</span></div>
                     <script>
                         function submitGuess() {
                             const guess = document.getElementById('guess').value;
+                            document.getElementById('lastGuess').textContent = guess;
                             fetch('/guess?guess=' + encodeURIComponent(guess))
                                 .then(response => response.text())
                                 .then(result => {
