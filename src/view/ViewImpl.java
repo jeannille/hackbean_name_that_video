@@ -101,14 +101,18 @@ public class ViewImpl implements View {
         }
     }
 
+    private String currentGuess = "";
+
     class GuessHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
-            String guess = exchange.getRequestURI().getQuery().split("=")[1];
+            String query = exchange.getRequestURI().getQuery();
+            currentGuess = java.net.URLDecoder.decode(query.split("=")[1], "UTF-8");
+            
             if (submitListener != null) {
-                // Simulate button click event
                 submitListener.actionPerformed(null);
             }
+            
             String response = "incorrect";
             exchange.sendResponseHeaders(200, response.length());
             try (OutputStream os = exchange.getResponseBody()) {
@@ -135,6 +139,6 @@ public class ViewImpl implements View {
     }
 
     public String getGuess() {
-        return ""; // Handled through HTTP now
+        return currentGuess;
     }
 }
